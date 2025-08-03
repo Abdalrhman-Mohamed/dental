@@ -9,19 +9,19 @@ const SERVICE_TYPES = [
   { type: "doctor", label: "Add Doctor" },
   { type: "lab", label: "Add Lab" },
   { type: "technician", label: "Add Technician" },
-  { type: "clinic", label: "Add Company" },
+  { type: "company", label: "Add Company" },
 ];
 
 const NewServiceBanner = () => {
   const [isTypeModalOpen, setIsTypeModalOpen] = useState(false);
-  const [selectedType, setSelectedType] = useState<null | "doctor" | "lab" | "technician" | "clinic">(null);
-
+  const [selectedType, setSelectedType] = useState<null | "doctor" | "lab" | "technician" | "company">(null);
+  let userRole = typeof window !== 'undefined' ? localStorage.getItem('role') : null;
   const openTypeModal = () => {
     setIsTypeModalOpen(true);
     setSelectedType(null);
   };
 
-  const handleTypeSelect = (type: "doctor" | "lab" | "technician" | "clinic") => {
+  const handleTypeSelect = (type: "doctor" | "lab" | "technician" | "company") => {
     setIsTypeModalOpen(false);
     setSelectedType(type);
   };
@@ -50,7 +50,7 @@ const NewServiceBanner = () => {
         title="Select Service Type"
       >
         <div className="flex flex-col gap-3 w-full mt-2">
-          {SERVICE_TYPES.map((service) => (
+          {SERVICE_TYPES.filter((role) => userRole === 'admin' ? role.type : role.type === userRole).map((service) => (
             <Button
               key={service.type}
               className="w-full bg-blue-100 text-blue-700 hover:bg-blue-200 border border-blue-600"
@@ -68,11 +68,10 @@ const NewServiceBanner = () => {
         closeModal={handleFormClose}
         title={
           selectedType
-            ? `Add New ${
-                selectedType === "clinic"
-                  ? "Company"
-                  : selectedType.charAt(0).toUpperCase() + selectedType.slice(1)
-              }`
+            ? `Add New ${selectedType === "company"
+              ? "Company"
+              : selectedType.charAt(0).toUpperCase() + selectedType.slice(1)
+            }`
             : ""
         }
       >

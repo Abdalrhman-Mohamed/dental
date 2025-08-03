@@ -62,7 +62,7 @@ export const updateUser = (id: string, userData: any) => api.patch(`/user/${id}`
 export const deleteUser = (id: string) => api.delete(`/user/${id}`);
 
 // Labs
-export const createLab = (labData: any) => api.post('/labs', labData);
+export const createLab = (labData: any) => api.post('/labs', labData)
 export const getLabs = () => api.get('/labs');
 export const getLabById = (id: string) => api.get(`/labs/${id}`);
 export const updateLab = (id: string, labData: any) => api.patch(`/labs/${id}`, labData);

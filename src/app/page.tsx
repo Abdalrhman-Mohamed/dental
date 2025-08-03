@@ -12,7 +12,7 @@ export default function Home() {
         </div>
         <ServicesSlider title="أفضل الأطباء" filterByType="doctor" />
         <ServicesSlider title="معامل الأسنان المتخصصة" filterByType="lab" />
-        <ServicesSlider title="شركات ومراكز أسنان" filterByType="clinic" />
+        <ServicesSlider title="شركات ومراكز أسنان" filterByType="company" />
         <ServicesSlider title="فنيين تركيبات محترفين" filterByType="technician" />
       </>
     </>

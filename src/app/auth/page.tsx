@@ -104,6 +104,7 @@ export default function AuthPage() {
 
         if (res.message === "user created successfully") {
           localStorage.setItem('auth', res?.data?.access_token?.access_token)
+          localStorage.setItem('role', res?.data?.role)
           router.push("/");
         } else {
           router.push("/auth");
@@ -115,7 +116,8 @@ export default function AuthPage() {
         loginContext(res.user, res.token);
 
         if (res.message === "login successfully") {
-          localStorage.setItem('auth', res.data.access_token)
+          localStorage.setItem('auth', res?.data?.access_token?.access_token)
+          localStorage.setItem('role', res?.data?.role)
           router.push("/");
         } else {
           router.push("/auth");

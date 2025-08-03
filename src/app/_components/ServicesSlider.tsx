@@ -13,15 +13,14 @@ import { useServices } from '../../context/ServicesContext';
 
 type Props = {
   title: string;
-  filterByType: 'doctor' | 'lab' | 'clinic' | 'technician';
+  filterByType: 'doctor' | 'lab' | 'clinic' | 'technician' | 'company';
 };
 
 export default function ServicesSlider({ title, filterByType }: Props) {
   const { services, loading, error } = useServices();
-console.log(services);
-
   const filteredServices = services.filter((s) => s.type === filterByType);
 
+  console.log(filteredServices);
   if (loading) {
     return (
       <section
