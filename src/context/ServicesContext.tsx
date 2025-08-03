@@ -23,11 +23,11 @@ export const ServicesProvider = ({ children }: { children: ReactNode }) => {
   const [services, setServices] = useState<Service[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
-
+  
   const getSafe = async (label: string, fn: () => Promise<any>): Promise<any[]> => {
     try {
-      const res = await fn();
-      if (Array.isArray(res?.data)) return res?.data;
+      const res = await fn();      
+      if (Array.isArray(res?.data?.data)) return res?.data?.data;
       return [];
     } catch (err: any) {
       console.log(`❌ ${label} failed`, {

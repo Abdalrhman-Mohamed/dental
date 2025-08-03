@@ -24,28 +24,28 @@ api.interceptors.request.use(
 );
 
 // Response interceptor with improved error logging
-api.interceptors.response.use(
-  (response) => response.data,
-  (error) => {
-    const { response } = error;
+// api.interceptors.response.use(
+//   (response) => response,
+//   (error) => {
+//     const { response } = error;
 
-    if (response) {
-      // console.error(' API Error Response:', {
-      //   url: response.config.url,
-      //   method: response.config.method,
-      //   status: response.status,
-      //   statusText: response.statusText,
-      //   data: response.data,
-      // });
-    } else if (error.request) {
-      console.error(' No response received:', error.request);
-    } else {
-      console.error(' Error setting up request:', error.message);
-    }
+//     if (response) {
+//       // console.error(' API Error Response:', {
+//       //   url: response.config.url,
+//       //   method: response.config.method,
+//       //   status: response.status,
+//       //   statusText: response.statusText,
+//       //   data: response.data,
+//       // });
+//     } else if (error.request) {
+//       console.error(' No response received:', error.request);
+//     } else {
+//       console.error(' Error setting up request:', error.message);
+//     }
 
-    return Promise.reject(error);
-  }
-);
+//     return Promise.reject(error);
+//   }
+// );
 
 //  API endpoints
 

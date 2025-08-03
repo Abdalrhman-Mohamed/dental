@@ -18,6 +18,7 @@ type Props = {
 
 export default function ServicesSlider({ title, filterByType }: Props) {
   const { services, loading, error } = useServices();
+console.log(services);
 
   const filteredServices = services.filter((s) => s.type === filterByType);
 

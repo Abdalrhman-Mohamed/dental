@@ -21,7 +21,7 @@ export default function ServicePage() {
   const [serviceToDelete, setServiceToDelete] = useState<ServiceItem | null>(null);
   const [deleting, setDeleting] = useState<boolean>(false);
   const { services: allServices, loading: loadingg, error: errorr } = useServices();
-
+  
   useEffect(() => {
     fetchAllServices();
   }, []);
