@@ -49,6 +49,7 @@ const ServiceForm = ({ type, onClose }: Props) => {
         required
       />
       <Input
+        type="email"
         placeholder="email"
         value={form.email}
         onChange={(e) => setForm((prev) => ({ ...prev, email: e.target.value }))}

@@ -10,6 +10,7 @@ import 'swiper/css/pagination';
 import Link from 'next/link';
 import Button from './ui/Button';
 import { useServices } from '../../context/ServicesContext';
+import { useEffect, useMemo, useState } from 'react';
 
 type Props = {
   title: string;
@@ -18,9 +19,19 @@ type Props = {
 
 export default function ServicesSlider({ title, filterByType }: Props) {
   const { services, loading, error } = useServices();
-  const filteredServices = services.filter((s) => s.type === filterByType);
+  console.log(services);
+  
+  // const [data, setData] = useState<any[]>()
 
-  console.log(filteredServices);
+  // useEffect(() => {
+  //   const filteredServices = services.filter((s) => s.type === filterByType);
+  //   setData(filteredServices)
+  // }, [services, filterByType])
+
+  const data = useMemo(() => {
+    return services.filter((s) => s.type === filterByType);
+  }, [services, filterByType]);
+
   if (loading) {
     return (
       <section
@@ -53,7 +64,7 @@ export default function ServicesSlider({ title, filterByType }: Props) {
     );
   }
 
-  if (filteredServices.length === 0) {
+  if (data?.length === 0) {
     return (
       <section
         className="w-full bg-no-repeat bg-cover bg-center py-28 min-h-[90vh] flex items-center justify-center"
@@ -66,6 +77,8 @@ export default function ServicesSlider({ title, filterByType }: Props) {
       </section>
     );
   }
+
+
 
   return (
     <section
@@ -90,7 +103,7 @@ export default function ServicesSlider({ title, filterByType }: Props) {
           }}
           modules={[Navigation, Pagination, Autoplay]}
         >
-          {filteredServices.map((service) => (
+          {data?.map((service) => (
             <SwiperSlide key={service.id}>
               <div className="bg-white shadow-lg rounded-xl overflow-hidden">
                 <img
@@ -107,7 +120,7 @@ export default function ServicesSlider({ title, filterByType }: Props) {
                   <h3 className="text-lg font-semibold text-gray-800">
                     {service.title}
                   </h3>
-                  <Link href={`/services/${service.id}`}>
+                  <Link href={`/services/${service?.id}`}>
                     <Button className="mt-3" variant="primary">
                       Learn More
                     </Button>

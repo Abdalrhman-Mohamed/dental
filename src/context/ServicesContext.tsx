@@ -1,5 +1,5 @@
 'use client';
-import React, { createContext, useContext, useState, useEffect, ReactNode, } from 'react';
+import React, { createContext, useContext, useState, useEffect, ReactNode, useMemo, } from 'react';
 import { createLab, getCompanies, getLabs, getProducts } from '@/api';
 
 export type Service = {
@@ -14,6 +14,8 @@ interface ServicesContextType {
   loading: boolean;
   error: string | null;
   addService: (service: any) => void;
+  getServiceById: (serviceId: string) => any;
+  fetchServices: () => any;
 }
 
 const ServicesContext = createContext<ServicesContextType | undefined>(undefined);
@@ -85,7 +87,7 @@ export const ServicesProvider = ({ children }: { children: ReactNode }) => {
 
       if (allServices.length === 0) {
         setError('No services returned from API.');
-      }0
+      }
 
       setServices(allServices);
     } catch (err) {
@@ -96,18 +98,31 @@ export const ServicesProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const addService = async (service: any) => {
-    console.log(service);
-
     const { data } = await createLab(service);
+    // await fetchServices();
     setServices((prev) => [...prev, data]);
+  };
+
+  const getServiceById = async (serviceId: string) => {
+    const service = services.filter((service) => service.id === serviceId)
+    return service
   };
 
   useEffect(() => {
     fetchServices();
   }, []);
 
+  const contextValue = useMemo(() => ({
+    services,
+    loading,
+    error,
+    addService,
+    getServiceById,
+    fetchServices
+  }), [services, loading, error, addService, getServiceById, fetchServices]);
+
   return (
-    <ServicesContext.Provider value={{ services, loading, error, addService }}>
+    <ServicesContext.Provider value={contextValue}>
       {children}
     </ServicesContext.Provider>
   );
