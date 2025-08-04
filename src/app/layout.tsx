@@ -7,6 +7,7 @@ import Footer from "./_components/footer";
 import { usePathname } from 'next/navigation';
 import { metadata } from './metadata';
 import AuthProvider from "@/providers/AuthProvider";
+import { AllServicesProvider } from "@/context/allServicesContext";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -35,13 +36,15 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <ServicesProvider>
-          <AuthProvider>
-            {!isLoginPage && <NavBar />}
-            {children}
-            {!isLoginPage && <Footer />}
-          </AuthProvider>
-        </ServicesProvider>
+        <AuthProvider>
+          <AllServicesProvider>
+            <ServicesProvider>
+              {!isLoginPage && <NavBar />}
+              {children}
+              {!isLoginPage && <Footer />}
+            </ServicesProvider>
+          </AllServicesProvider>
+        </AuthProvider>
       </body>
     </html>
   );

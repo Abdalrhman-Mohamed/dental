@@ -34,44 +34,43 @@ const ResponsiveNav = () => {
   return (
     <>
       {/* ======= TOP NAVBAR ======= */}
-<div
-  className={`fixed w-full transition-all duration-300 h-[12vh] z-[1000] ${
-    navBg ? "bg-indigo-400" : "bg-transparent backdrop-blur-md"
-  }`}
->
-  <div className="flex items-center h-full justify-between w-[90%] xl:w-[98%] mx-auto">
-    {/* Logo */}
-    <Link href="/">
-      <Image
-        src="/logo-removebg.png"
-        alt="logo"
-        width={120}
-        height={120}
-        className="object-contain"
-      />
-    </Link>
+      <div
+        className={`fixed w-full transition-all duration-300 h-[12vh] z-[1000] ${navBg ? "bg-indigo-400" : "bg-transparent backdrop-blur-md"
+          }`}
+      >
+        <div className="flex items-center h-full justify-between w-[90%] xl:w-[98%] mx-auto">
+          {/* Logo */}
+          <Link href="/">
+            <Image
+              src="/logo-removebg.png"
+              alt="logo"
+              width={120}
+              height={120}
+              className="object-contain"
+            />
+          </Link>
 
-    {/* Desktop Navlinks */}
-    <div className="hidden lg:flex items-center space-x-10">
-      {navlinks.map((link) => (
-        <Link key={link.id} href={link.url}>
-          <p className="text-blue-600 font-medium cursor-pointer transition-all duration-300 hover:text-blue-800 hover:underline underline-offset-4">
-            {link.Label}
-          </p>
-        </Link>
-      ))}
-    </div>
+          {/* Desktop Navlinks */}
+          <div className="hidden lg:flex items-center space-x-10">
+            {navlinks.map((link) => (
+              <Link key={link.id} href={link.url}>
+                <p className="text-blue-600 font-medium cursor-pointer transition-all duration-300 hover:text-blue-800 hover:underline underline-offset-4">
+                  {link.Label}
+                </p>
+              </Link>
+            ))}
+          </div>
 
-    {/* Right Buttons */}
-    <div className="flex items-center space-x-4">
-      {/* Mobile Menu Button */}
-      <HiBars3BottomRight
-        onClick={() => setShowNav(true)}
-        className="flex justify-center w-8 h-8 cursor-pointer text-white lg:hidden"
-      />
-    </div>
-  </div>
-</div>
+          {/* Right Buttons */}
+          <div className="flex items-center space-x-4">
+            {/* Mobile Menu Button */}
+            <HiBars3BottomRight
+              onClick={() => setShowNav(true)}
+              className="flex justify-center w-8 h-8 cursor-pointer text-white lg:hidden"
+            />
+          </div>
+        </div>
+      </div>
 
       {/* ======= MOBILE NAV OVERLAY ======= */}
       {showNav && (
@@ -83,9 +82,8 @@ const ResponsiveNav = () => {
 
       {/* ======= MOBILE NAV MENU ======= */}
       <div
-        className={`fixed top-0 left-0 h-full w-[85%] sm:w-[60%] bg-indigo-900 text-white flex flex-col justify-between transition-transform duration-500 z-[10001] px-6 pt-8 pb-10 transform ${
-          showNav ? "translate-x-0" : "-translate-x-full"
-        } shadow-xl rounded-r-2xl`}
+        className={`fixed top-0 left-0 h-full w-[85%] sm:w-[60%] bg-indigo-900 text-white flex flex-col justify-between transition-transform duration-500 z-[10001] px-6 pt-8 pb-10 transform ${showNav ? "translate-x-0" : "-translate-x-full"
+          } shadow-xl rounded-r-2xl`}
       >
         {/* Close Icon */}
         <CgClose

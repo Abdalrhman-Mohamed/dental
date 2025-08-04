@@ -49,10 +49,12 @@ api.interceptors.request.use(
 
 //  API endpoints
 
+// Home
+export const getHomeData = () => api.get('/home');
+export const getHomeDataById = (id: string) => api.get(`/home/${id}`);
+
 // User Auth
 export const registerUser = ({ user_name, email, password, phone_number, role }: any) => api.post('/user/auth/register', { email, password, user_name, phone_number, role });
-
-
 export const loginUser = ({ email, password }: any) => api.post('/user/auth/login', { email, password });
 
 // Users

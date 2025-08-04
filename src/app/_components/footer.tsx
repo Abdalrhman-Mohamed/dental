@@ -54,7 +54,7 @@ const Footer = () => {
   ];
 
   return (
-    <footer className="bg-blue-100 py-16 mt-16">
+    <footer className="bg-blue-100 pt-16">
       <div className="container mx-auto px-6 md:px-12 grid grid-cols-1 md:grid-cols-3 gap-12">
         {/* Left Column */}
         <div className="text-center md:text-left">

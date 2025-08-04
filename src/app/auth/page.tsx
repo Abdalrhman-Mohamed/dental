@@ -4,16 +4,15 @@ import { useRouter } from "next/navigation";
 import { useAuth } from "../../context/auth-context";
 import { loginUser, registerUser } from "@/api";
 
-export const register = async ({ email, password, user_name, phone_number, role }:
+const register = async ({ email, password, user_name, phone_number, role }:
   { user_name: string; email: string; password: string; phone_number?: string; role: string }) => {
   const { data } = await registerUser({ email, password, user_name, phone_number, role });
   console.log(data);
   return data;
 };
 
-export const login = async ({ email, password }: { email: string; password: string }) => {
+const login = async ({ email, password }: { email: string; password: string }) => {
   const { data } = await loginUser({ email, password });
-
   return data;
 };
 
@@ -98,7 +97,7 @@ export default function AuthPage() {
         // await register({ name, email, password });
 
         const res = await register({ user_name, email, password, phone_number, role });
-        console.log(res);
+        // console.log(res);
 
         loginContext(res.user, res.token);
 
@@ -111,7 +110,7 @@ export default function AuthPage() {
         }
       } else {
         const res = await login({ email, password });
-        console.log(res);
+        // console.log(res);
 
         loginContext(res.user, res.token);
 

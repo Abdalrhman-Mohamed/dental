@@ -13,9 +13,12 @@ interface ServicesContextType {
   services: Service[];
   loading: boolean;
   error: string | null;
-  addService: (service: any) => void;
-  getServiceById: (serviceId: string) => any;
-  fetchServices: () => any;
+  // addService: (service: any) => void;
+  // getServiceById: (serviceId: string) => void;
+  // fetchServices: () => void;
+  // fetchLabs: () => any;
+  // fetchCompanies: () => any;
+  // fetchDoctors: () => any;
 }
 
 const ServicesContext = createContext<ServicesContextType | undefined>(undefined);
@@ -25,101 +28,120 @@ export const ServicesProvider = ({ children }: { children: ReactNode }) => {
   const [services, setServices] = useState<any[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  let token = typeof window !== 'undefined' ? localStorage.getItem('auth') : null;
 
-  const getSafe = async (label: string, fn: () => Promise<any>): Promise<any[]> => {
-    try {
-      const res = await fn();
-      if (Array.isArray(res?.data?.data)) return res?.data?.data;
-      return [];
-    } catch (err: any) {
-      console.log(`❌ ${label} failed`, {
-        message: err?.message,
-        status: err?.response?.status,
-        data: err?.response?.data,
-      });
-      return [];
-    }
-  };
+  // const getSafe = async (label: string, fn: () => Promise<any>): Promise<any[]> => {
+  //   try {
+  //     const res = await fn();
+  //     if (Array.isArray(res?.data?.data)) return res?.data?.data;
+  //     return [];
+  //   } catch (err: any) {
+  //     console.log(`❌ ${label} failed`, {
+  //       message: err?.message,
+  //       status: err?.response?.status,
+  //       data: err?.response?.data,
+  //     });
+  //     return [];
+  //   }
+  // };
 
-  const fetchServices = async () => {
-    setLoading(true);
-    setError(null);
+  // const fetchLabs = async () => {
+  //   if (!token) {
+  //     return
+  //   }
+  //   const res = await getLabs()
+  //   return res?.data?.data
+  // }
 
-    try {
-      const [products, labs, companies] = await Promise.all([
-        getSafe('getProducts', () => getProducts()),
-        getSafe('getLabs', () => getLabs()),
-        getSafe('getCompanies', () => getCompanies()),
-      ]);
+  // const fetchCompanies = async () => {
+  //   if (!token) {
+  //     return
+  //   }
+  //   const res = await getCompanies()
+  //   return res?.data?.data
+  // }
 
-      const allServices: any[] = [];
+  // const fetchServices = async () => {
+  //   setLoading(true);
+  //   setError(null);
 
-      // Handle Products
-      products.forEach((product: any) => {
-        allServices.push({
-          ...product,
-          image: product.imageUrl || '/i.webp',
-          type: product.isDoctor
-            ? 'doctor'
-            : product.isTechnician
-              ? 'technician'
-              : 'doctor',
-        });
-      });
+  //   try {
+  //     const [products, labs, companies] = await Promise.all([
+  //       getSafe('getProducts', () => getProducts()),
+  //       getSafe('getLabs', () => getLabs()),
+  //       getSafe('getCompanies', () => getCompanies()),
+  //     ]);
 
-      // Handle Labs
-      labs.forEach((lab: any) => {
-        allServices.push({
-          ...lab,
-          image: lab.imageUrl || '/do.jpeg',
-          type: 'lab',
-        });
-      });
+  //     const allServices: any[] = [];
 
-      // Handle Companies
-      companies.forEach((company: any) => {
-        allServices.push({
-          ...company,
-          image: company.imageUrl || '/file_bwmsb.jpg',
-          type: 'company',
-        });
-      });
+  //     // Handle Products
+  //     products.forEach((product: any) => {
+  //       allServices.push({
+  //         ...product,
+  //         image: product.imageUrl || '/i.webp',
+  //         type: product.isDoctor
+  //           ? 'doctor'
+  //           : product.isTechnician
+  //             ? 'technician'
+  //             : 'doctor',
+  //       });
+  //     });
 
-      if (allServices.length === 0) {
-        setError('No services returned from API.');
-      }
+  //     // Handle Labs
+  //     labs.forEach((lab: any) => {
+  //       allServices.push({
+  //         ...lab,
+  //         image: lab.imageUrl || '/do.jpeg',
+  //         type: 'lab',
+  //       });
+  //     });
 
-      setServices(allServices);
-    } catch (err) {
-      setError('Unexpected error occurred while fetching services.');
-    } finally {
-      setLoading(false);
-    }
-  };
+  //     // Handle Companies
+  //     companies.forEach((company: any) => {
+  //       allServices.push({
+  //         ...company,
+  //         image: company.imageUrl || '/file_bwmsb.jpg',
+  //         type: 'company',
+  //       });
+  //     });
 
-  const addService = async (service: any) => {
-    const { data } = await createLab(service);
-    // await fetchServices();
-    setServices((prev) => [...prev, data]);
-  };
+  //     if (allServices.length === 0) {
+  //       setError('No services returned from API.');
+  //     }
 
-  const getServiceById = async (serviceId: string) => {
-    const service = services.filter((service) => service.id === serviceId)
-    return service
-  };
+  //     setServices(allServices);
+  //   } catch (err) {
+  //     setError('Unexpected error occurred while fetching services.');
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
+
+  // const addService = async (service: any) => {
+  //   const { data } = await createLab(service);
+  //   // await fetchServices();
+  //   setServices((prev) => [...prev, data]);
+  // };
+
+  // const getServiceById = async (serviceId: string) => {
+  //   services.filter((service) => service.id === serviceId)
+  // };
 
   useEffect(() => {
-    fetchServices();
-  }, []);
+    // fetchServices();
+    // fetchLabs()
+  }, [token]);
 
   const contextValue = useMemo(() => ({
     services,
     loading,
     error,
-    addService,
-    getServiceById,
-    fetchServices
-  }), [services, loading, error, addService, getServiceById, fetchServices]);
+    // addService,
+    // getServiceById,
+    // fetchServices,
+    // fetchLabs,
+    // fetchCompanies
+  }), [services, loading, error]);
 
   return (
     <ServicesContext.Provider value={contextValue}>

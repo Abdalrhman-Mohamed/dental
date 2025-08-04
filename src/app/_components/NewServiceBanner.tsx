@@ -1,9 +1,10 @@
-'use client'
+// 'use client'
 import { useState } from "react";
-import { FaTooth, FaPlus } from "react-icons/fa";
+import { FaPlus } from "react-icons/fa";
 import Modal from "./ui/Modal";
 import Button from "./ui/Button";
-import ServiceForm from "./ServiceForm";
+import LabForm from "./LabForm";
+import CompanyForm from "./CompanyForm";
 
 const SERVICE_TYPES = [
   { type: "doctor", label: "Add Doctor" },
@@ -75,9 +76,11 @@ const NewServiceBanner = () => {
             : ""
         }
       >
-        {selectedType && (
-          <ServiceForm type={selectedType} onClose={handleFormClose} />
-        )}
+        {selectedType === 'lab' ?
+          <LabForm type={selectedType} onClose={handleFormClose} />
+          : selectedType === 'company' ? <CompanyForm type={selectedType} onClose={handleFormClose} />
+            : null
+        }
       </Modal>
     </>
   );

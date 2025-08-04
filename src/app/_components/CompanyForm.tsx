@@ -1,15 +1,15 @@
 import { useState } from "react";
 import Input from "./ui/Input";
 import Button from "./ui/Button";
-import { useServices } from "../../context/ServicesContext";
+import { useAllServices } from "@/context/allServicesContext";
 
 type Props = {
   type: "doctor" | "lab" | "technician" | "company";
   onClose: () => void;
 };
 
-const ServiceForm = ({ type, onClose }: Props) => {
-  const { addService } = useServices();
+const CompanyForm = ({ type, onClose }: Props) => {
+  const { addCompany } = useAllServices();
   const [form, setForm] = useState({
     name: '',
     description: '',
@@ -17,6 +17,8 @@ const ServiceForm = ({ type, onClose }: Props) => {
     phone_number: '',
     email: '',
     website: '',
+    imageUrl: '',
+    coverUrl: '',
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -24,12 +26,12 @@ const ServiceForm = ({ type, onClose }: Props) => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
-    if (!form.name || !form.phone_number || !form.email) {
+    if (!form.name || !form.phone_number || !form.email || !form.address) {
       setError("Please fill in all fields.");
       return;
     }
     setLoading(true);
-    addService(form);
+    addCompany(form);
     setLoading(false);
     onClose();
   };
@@ -37,7 +39,7 @@ const ServiceForm = ({ type, onClose }: Props) => {
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-4">
       <Input
-        placeholder="Service Name"
+        placeholder="Company Name"
         value={form.name}
         onChange={(e) => setForm((prev) => ({ ...prev, name: e.target.value }))}
         required
@@ -59,7 +61,6 @@ const ServiceForm = ({ type, onClose }: Props) => {
         placeholder="Description"
         value={form.description}
         onChange={(e) => setForm((prev) => ({ ...prev, description: e.target.value }))}
-        required
       />
       <Input
         placeholder="Website URL"
@@ -70,6 +71,17 @@ const ServiceForm = ({ type, onClose }: Props) => {
         placeholder="Address"
         value={form.address}
         onChange={(e) => setForm((prev) => ({ ...prev, address: e.target.value }))}
+        required
+      />
+      <Input
+        placeholder="image url"
+        value={form.imageUrl}
+        onChange={(e) => setForm((prev) => ({ ...prev, imageUrl: e.target.value }))}
+      />
+      <Input
+        placeholder="cover url"
+        value={form.coverUrl}
+        onChange={(e) => setForm((prev) => ({ ...prev, coverUrl: e.target.value }))}
       />
       {/* type is hidden/auto-assigned */}
       {error && <div className="text-red-500 text-sm">{error}</div>}
@@ -80,4 +92,4 @@ const ServiceForm = ({ type, onClose }: Props) => {
   );
 };
 
-export default ServiceForm; 
+export default CompanyForm; 

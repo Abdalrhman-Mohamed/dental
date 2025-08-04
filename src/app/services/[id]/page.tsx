@@ -1,9 +1,8 @@
-// /app/services/[id]/page.tsx
 'use client'
 import { notFound } from 'next/navigation';
 import Image from 'next/image';
-import { useServices } from '@/context/ServicesContext';
 import { use, useEffect, useState } from 'react';
+import { getHomeDataById } from '@/api';
 
 type Service = {
   id: string;
@@ -20,14 +19,14 @@ type Service = {
 
 
 export default function ServiceDetailsPage({ params }: { params: Promise<{ id: string }> }) {
-  const { getServiceById } = useServices()
   const { id } = use(params)
   const [service, setService] = useState<any | null>(null);
 
   useEffect(() => {
     const fetchService = async () => {
-      const result = await getServiceById(id);
-      setService(result);
+      const { data } = await getHomeDataById(id);
+      console.log(data);
+      setService(data);
     };
     fetchService();
   }, [id]);
@@ -49,9 +48,9 @@ export default function ServiceDetailsPage({ params }: { params: Promise<{ id: s
           className="w-full h-64 object-cover"
         />
         <div className="p-6">
-          <h1 className="text-2xl font-bold mb-2">{service[0]?.title}</h1>
-          <p className="text-gray-700 mb-4">Type: {service[0]?.type}</p>
-          <p className="text-gray-600">Details about the service go here...</p>
+          <h1 className="text-2xl font-bold mb-2">{service[0]?.user_name}</h1>
+          <p className="text-gray-700 mb-4">Type: {service[0]?.role}</p>
+          <p className="text-gray-600">{service[0]?.subscribed}</p>
         </div>
       </div>
     </div>

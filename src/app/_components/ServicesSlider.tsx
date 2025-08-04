@@ -9,28 +9,21 @@ import 'swiper/css/pagination';
 
 import Link from 'next/link';
 import Button from './ui/Button';
-import { useServices } from '../../context/ServicesContext';
-import { useEffect, useMemo, useState } from 'react';
+import { useAllServices } from '@/context/allServicesContext';
 
 type Props = {
+  mainData: any[];
   title: string;
   filterByType: 'doctor' | 'lab' | 'clinic' | 'technician' | 'company';
 };
 
-export default function ServicesSlider({ title, filterByType }: Props) {
-  const { services, loading, error } = useServices();
-  console.log(services);
-  
-  // const [data, setData] = useState<any[]>()
+export default function ServicesSlider({ mainData, title, filterByType }: Props) {
+  const { loading, error } = useAllServices();
 
-  // useEffect(() => {
-  //   const filteredServices = services.filter((s) => s.type === filterByType);
-  //   setData(filteredServices)
-  // }, [services, filterByType])
+  mainData?.map((item) =>
+    console.log(item?.name)
+  )
 
-  const data = useMemo(() => {
-    return services.filter((s) => s.type === filterByType);
-  }, [services, filterByType]);
 
   if (loading) {
     return (
@@ -64,7 +57,7 @@ export default function ServicesSlider({ title, filterByType }: Props) {
     );
   }
 
-  if (data?.length === 0) {
+  if (mainData?.length === 0) {
     return (
       <section
         className="w-full bg-no-repeat bg-cover bg-center py-28 min-h-[90vh] flex items-center justify-center"
@@ -77,8 +70,6 @@ export default function ServicesSlider({ title, filterByType }: Props) {
       </section>
     );
   }
-
-
 
   return (
     <section
@@ -103,12 +94,12 @@ export default function ServicesSlider({ title, filterByType }: Props) {
           }}
           modules={[Navigation, Pagination, Autoplay]}
         >
-          {data?.map((service) => (
-            <SwiperSlide key={service.id}>
+          {mainData?.map((service: any) => (
+            <SwiperSlide key={service?.id}>
               <div className="bg-white shadow-lg rounded-xl overflow-hidden">
                 <img
-                  src={service.image}
-                  alt={service.title}
+                  src={service?.image_url}
+                  alt={service?.name}
                   className="w-full h-48 object-cover"
                   onError={(e) => {
                     // Fallback image if the service image fails to load
@@ -118,7 +109,7 @@ export default function ServicesSlider({ title, filterByType }: Props) {
                 />
                 <div className="p-4">
                   <h3 className="text-lg font-semibold text-gray-800">
-                    {service.title}
+                    {filterByType === 'lab' ? service?.name : filterByType === 'doctor' ? service?.user_name : service?.name}
                   </h3>
                   <Link href={`/services/${service?.id}`}>
                     <Button className="mt-3" variant="primary">
