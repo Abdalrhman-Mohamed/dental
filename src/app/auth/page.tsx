@@ -1,20 +1,8 @@
 "use client";
 import { useEffect, useState, memo } from "react";
 import { useRouter } from "next/navigation";
-import { useAuth } from "../../context/auth-context";
-import { loginUser, registerUser } from "@/api";
+import { useAuthstore } from "@/store/useAuthStore";
 
-const register = async ({ email, password, user_name, phone_number, role }:
-  { user_name: string; email: string; password: string; phone_number?: string; role: string }) => {
-  const { data } = await registerUser({ email, password, user_name, phone_number, role });
-  console.log(data);
-  return data;
-};
-
-const login = async ({ email, password }: { email: string; password: string }) => {
-  const { data } = await loginUser({ email, password });
-  return data;
-};
 
 const InputField = memo(function InputField({ name, type, placeholder, value, onChange, }: {
   name: string; type: string; placeholder: string; value: string;
@@ -42,7 +30,8 @@ const InputField = memo(function InputField({ name, type, placeholder, value, on
 });
 
 export default function AuthPage() {
-  const { login: loginContext } = useAuth();
+  const { login, register, loading, error: apiError } = useAuthstore()
+  const [error, setError] = useState<string>()
   const [form, setForm] = useState({
     user_name: "",
     email: "",
@@ -52,8 +41,6 @@ export default function AuthPage() {
     role: "",
   });
   const [isSignUp, setIsSignUp] = useState(false);
-  const [error, setError] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
   const [show, setShow] = useState(false);
   const router = useRouter();
 
@@ -76,7 +63,7 @@ export default function AuthPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsLoading(true);
+    // setIsLoading(true);
     setError("");
 
     const { user_name, email, password, confirmPassword, phone_number, role } = form;
@@ -94,38 +81,28 @@ export default function AuthPage() {
           setError("Passwords do not match");
           return;
         }
-        // await register({ name, email, password });
 
         const res = await register({ user_name, email, password, phone_number, role });
-        // console.log(res);
 
-        loginContext(res.user, res.token);
+        // loginContext(res.user, res.token);
 
         if (res.message === "user created successfully") {
-          localStorage.setItem('auth', res?.data?.access_token?.access_token)
-          localStorage.setItem('role', res?.data?.role)
           router.push("/");
         } else {
           router.push("/auth");
         }
       } else {
-        const res = await login({ email, password });
-        // console.log(res);
+        const data = await login({ email, password });
+        // loginContext(res.user, res.token);
 
-        loginContext(res.user, res.token);
-
-        if (res.message === "login successfully") {
-          localStorage.setItem('auth', res?.data?.access_token?.access_token)
-          localStorage.setItem('role', res?.data?.role)
+        if (data.message === "login successfully") {
           router.push("/");
         } else {
           router.push("/auth");
         }
       }
     } catch (err: any) {
-      setError(err.message || "Something went wrong");
-    } finally {
-      setIsLoading(false);
+      setError(apiError || "Something went wrong");
     }
   };
 
@@ -148,13 +125,13 @@ export default function AuthPage() {
   const SubmitButton = () => (
     <button
       type="submit"
-      disabled={isLoading}
-      className={`w-full py-2 rounded-full bg-white text-blue-700 font-semibold text-sm transition-all ${isLoading
+      disabled={loading}
+      className={`w-full py-2 rounded-full bg-white text-blue-700 font-semibold text-sm transition-all ${loading
         ? "opacity-70 cursor-not-allowed"
         : "hover:bg-gray-100 hover:scale-105 active:scale-95"
         }`}
     >
-      {isLoading ? (
+      {loading ? (
         <div className="flex items-center justify-center">
           <div className="w-5 h-5 border-2 border-blue-700 border-t-transparent rounded-full animate-spin mr-2" />
           {isSignUp ? "Signing up..." : "Signing in..."}
@@ -190,7 +167,7 @@ export default function AuthPage() {
         </p>
 
         {error && (
-          <div className="mb-3 px-3 py-2 bg-red-500/20 border border-red-500/50 rounded-lg text-white text-xs text-center">
+          <div className="mb-3 px-3 py-2 bg-red-500/20 border border-red-500/50 rounded-lg text-white text-sm text-center">
             {error}
           </div>
         )}

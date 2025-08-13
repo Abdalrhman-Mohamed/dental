@@ -1,35 +1,42 @@
 'use client'
-import { getHomeData } from "@/api"
 import NewServiceBanner from "./NewServiceBanner"
 import ServicesSlider from "./ServicesSlider"
 import { useEffect, useState } from "react"
-import { useAllServices } from "@/context/allServicesContext"
+import { useHomeStore } from "@/store/useHomeStore"
+import { useLabstore } from "@/store/useLabStore"
+import { useCompanystore } from "@/store/useCompanyStore"
 
 const Main = () => {
-    const { loading } = useAllServices()
+    const { fetchHomeData, token, loading, loadFromStorage } = useHomeStore()
+    const { loading: labLoading } = useLabstore()
+    const { loading: companyLoading } = useCompanystore()
     const [getData, setGetData] = useState() as any
-    const [token, setToken] = useState<string | null>(null)
 
     useEffect(() => {
-        const token = localStorage.getItem('auth')
-        setToken(token)
+        loadFromStorage()
         const data = async () => {
-            const { data } = await getHomeData()
+            const data = await fetchHomeData()
+            console.log(data);
+
             setGetData(data)
         }
         data()
-    }, [loading])
+    }, [loadFromStorage, companyLoading, labLoading])
 
 
     return (<>
         {token ? <>
-            <div className="flex items-center justify-center" >
-                <NewServiceBanner />
-            </div>
-            <ServicesSlider mainData={getData?.usersAsDoctors} title="أفضل الأطباء" filterByType="doctor" />
-            <ServicesSlider mainData={getData?.labs} title="معامل الأسنان المتخصصة" filterByType="lab" />
-            <ServicesSlider mainData={getData?.companys} title="شركات ومراكز أسنان" filterByType="company" />
-            <ServicesSlider mainData={getData?.usersAsTechnician} title="فنيين تركيبات محترفين" filterByType="technician" />
+            {loading ? <div className="w-full h-svh flex items-center justify-center">
+                <div className="w-5 h-5 border-2 border-blue-700 border-t-transparent rounded-full animate-spin mr-2" />
+            </div> : <>
+                <div className="flex items-center justify-center" >
+                    <NewServiceBanner companies={getData?.companys} />
+                </div>
+                <ServicesSlider mainData={getData?.usersAsDoctors} title="أفضل الأطباء" filterByType="doctor" />
+                <ServicesSlider mainData={getData?.labs} title="معامل الأسنان المتخصصة" filterByType="lab" />
+                <ServicesSlider mainData={getData?.companys} title="شركات ومراكز أسنان" filterByType="company" />
+                <ServicesSlider mainData={getData?.usersAsTechnician} title="فنيين تركيبات محترفين" filterByType="technician" />
+            </>}
         </> : null}
     </>)
 }

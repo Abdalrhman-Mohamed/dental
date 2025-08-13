@@ -5,6 +5,7 @@ import Modal from "./ui/Modal";
 import Button from "./ui/Button";
 import LabForm from "./LabForm";
 import CompanyForm from "./CompanyForm";
+import { useCompanystore } from "@/store/useCompanyStore";
 
 const SERVICE_TYPES = [
   { type: "doctor", label: "Add Doctor" },
@@ -13,7 +14,7 @@ const SERVICE_TYPES = [
   { type: "company", label: "Add Company" },
 ];
 
-const NewServiceBanner = () => {
+const NewServiceBanner = ({ companies }: any) => {
   const [isTypeModalOpen, setIsTypeModalOpen] = useState(false);
   const [selectedType, setSelectedType] = useState<null | "doctor" | "lab" | "technician" | "company">(null);
   let userRole = typeof window !== 'undefined' ? localStorage.getItem('role') : null;
@@ -30,6 +31,14 @@ const NewServiceBanner = () => {
   const handleFormClose = () => {
     setSelectedType(null);
   };
+
+  let filteredServiceTypes = SERVICE_TYPES;
+
+  if (companies?.length > 0) {
+    filteredServiceTypes = SERVICE_TYPES.filter(
+      (role) => role.type !== 'company'
+    );
+  }
 
   return (
     <>
@@ -51,7 +60,7 @@ const NewServiceBanner = () => {
         title="Select Service Type"
       >
         <div className="flex flex-col gap-3 w-full mt-2">
-          {SERVICE_TYPES.filter((role) => userRole === 'admin' ? role.type : role.type === userRole).map((service) => (
+          {filteredServiceTypes.filter((role) => userRole === 'admin' ? role.type : role.type === userRole).map((service) => (
             <Button
               key={service.type}
               className="w-full bg-blue-100 text-blue-700 hover:bg-blue-200 border border-blue-600"
@@ -77,8 +86,8 @@ const NewServiceBanner = () => {
         }
       >
         {selectedType === 'lab' ?
-          <LabForm type={selectedType} onClose={handleFormClose} />
-          : selectedType === 'company' ? <CompanyForm type={selectedType} onClose={handleFormClose} />
+          <LabForm onClose={handleFormClose} />
+          : selectedType === 'company' ? <CompanyForm onClose={handleFormClose} />
             : null
         }
       </Modal>

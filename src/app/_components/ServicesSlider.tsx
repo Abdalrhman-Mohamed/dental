@@ -1,15 +1,14 @@
 'use client';
+import Link from 'next/link';
+import Button from './ui/Button';
+import { useHomeStore } from '@/store/useHomeStore';
+import Image from 'next/image';
 
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Pagination, Autoplay } from 'swiper/modules';
-
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
-
-import Link from 'next/link';
-import Button from './ui/Button';
-import { useAllServices } from '@/context/allServicesContext';
 
 type Props = {
   mainData: any[];
@@ -18,8 +17,9 @@ type Props = {
 };
 
 export default function ServicesSlider({ mainData, title, filterByType }: Props) {
-  const { loading, error } = useAllServices();
-
+  const { loading, error } = useHomeStore()
+  console.log(mainData);
+  
   mainData?.map((item) =>
     console.log(item?.name)
   )
@@ -97,21 +97,22 @@ export default function ServicesSlider({ mainData, title, filterByType }: Props)
           {mainData?.map((service: any) => (
             <SwiperSlide key={service?.id}>
               <div className="bg-white shadow-lg rounded-xl overflow-hidden">
-                <img
-                  src={service?.image_url}
-                  alt={service?.name}
+                <Image
                   className="w-full h-48 object-cover"
-                  onError={(e) => {
-                    // Fallback image if the service image fails to load
-                    const target = e.target as HTMLImageElement;
-                    target.src = '/i.webp';
-                  }}
+                  width={80}
+                  height={80}
+                  src={service?.image_url ? service?.image_url : '/i.webp'}
+                  alt={service?.name || 'service image'}
                 />
                 <div className="p-4">
                   <h3 className="text-lg font-semibold text-gray-800">
                     {filterByType === 'lab' ? service?.name : filterByType === 'doctor' ? service?.user_name : service?.name}
                   </h3>
-                  <Link href={`/services/${service?.id}`}>
+                  <Link href={filterByType === 'lab' ? `/labs/${service?.id}`
+                    : filterByType === 'company' ? `/companies/${service?.id}`
+                      : filterByType === 'technician' ? `/technicians/${service?.id}`
+                        : filterByType === 'doctor' ? `/doctors/${service?.id}` : ''
+                  }>
                     <Button className="mt-3" variant="primary">
                       Learn More
                     </Button>

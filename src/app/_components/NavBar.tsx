@@ -1,26 +1,31 @@
 "use client";
-
 import { useEffect, useState } from "react";
 import { navlinks } from "../../constant/constant";
 import Image from "next/image";
 import Link from "next/link";
 import { HiBars3BottomRight, HiArrowRight } from "react-icons/hi2";
 import { CgClose } from "react-icons/cg";
+import { RxExit } from "react-icons/rx";
+import { useAuthstore } from "@/store/useAuthStore";
+import { useRouter } from "next/navigation";
 
 const ResponsiveNav = () => {
+  const { logOut, token, loadFromStorage } = useAuthstore() as any
   const [showNav, setShowNav] = useState(false);
   const [navBg, setNavBg] = useState(false);
-  const [cartCount, setCartCount] = useState(0);
+  const router = useRouter()
+  // const [cartCount, setCartCount] = useState(0);
 
   // Change navbar background on scroll
   useEffect(() => {
+    loadFromStorage()
     const handler = () => {
       setNavBg(window.scrollY >= 90);
     };
 
     window.addEventListener("scroll", handler);
     return () => window.removeEventListener("scroll", handler);
-  }, []);
+  }, [loadFromStorage]);
 
   // Lock scroll when mobile nav is open
   useEffect(() => {
@@ -51,7 +56,7 @@ const ResponsiveNav = () => {
           </Link>
 
           {/* Desktop Navlinks */}
-          <div className="hidden lg:flex items-center space-x-10">
+          <div className=" hidden lg:flex items-center space-x-10">
             {navlinks.map((link) => (
               <Link key={link.id} href={link.url}>
                 <p className="text-blue-600 font-medium cursor-pointer transition-all duration-300 hover:text-blue-800 hover:underline underline-offset-4">
@@ -60,6 +65,7 @@ const ResponsiveNav = () => {
               </Link>
             ))}
           </div>
+          {token !== null ? <div className="cursor-pointer hidden lg:flex items-center gap-2 px-3 py-2 rounded-xl" onClick={() => { logOut(), router.push('/auth') }}><RxExit color="#193cb8" size={20} /></div> : null}
 
           {/* Right Buttons */}
           <div className="flex items-center space-x-4">
@@ -103,7 +109,10 @@ const ResponsiveNav = () => {
               </div>
             </Link>
           ))}
+          {token !== null ? <div className="cursor-pointer lg:hidden" onClick={() => { logOut(), router.push('/auth') }}><RxExit color="#fff" size={20} /></div> : null}
         </div>
+
+
       </div>
     </>
   );

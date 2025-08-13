@@ -9,8 +9,26 @@ const api = axios.create({
   },
 });
 
+const apiWithUpload = axios.create({
+  baseURL: API_BASE_URL,
+});
+
 // Request interceptor for adding auth token
 api.interceptors.request.use(
+  (config) => {
+    const token = localStorage.getItem('auth');
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
+);
+
+// Request interceptor for adding auth token
+apiWithUpload.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem('auth');
     if (token) {
@@ -64,14 +82,14 @@ export const updateUser = (id: string, userData: any) => api.patch(`/user/${id}`
 export const deleteUser = (id: string) => api.delete(`/user/${id}`);
 
 // Labs
-export const createLab = (labData: any) => api.post('/labs', labData)
+export const createLab = (labData: any) => apiWithUpload.post('/labs', labData)
 export const getLabs = () => api.get('/labs');
 export const getLabById = (id: string) => api.get(`/labs/${id}`);
 export const updateLab = (id: string, labData: any) => api.patch(`/labs/${id}`, labData);
 export const deleteLab = (id: string) => api.delete(`/labs/${id}`);
 
 // Company
-export const createCompany = (companyData: any) => api.post('/company', companyData);
+export const createCompany = (companyData: any) => apiWithUpload.post('/company', companyData);
 export const getCompanies = () => api.get('/company');
 export const getCompanyById = (id: string) => api.get(`/company/${id}`);
 export const updateCompany = (id: string, companyData: any) => api.patch(`/company/${id}`, companyData);

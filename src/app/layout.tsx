@@ -8,6 +8,7 @@ import { usePathname } from 'next/navigation';
 import { metadata } from './metadata';
 import AuthProvider from "@/providers/AuthProvider";
 import { AllServicesProvider } from "@/context/allServicesContext";
+import { ToastContainer } from "react-toastify";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -39,6 +40,7 @@ export default function RootLayout({
         <AuthProvider>
           <AllServicesProvider>
             <ServicesProvider>
+              <ToastContainer />
               {!isLoginPage && <NavBar />}
               {children}
               {!isLoginPage && <Footer />}
